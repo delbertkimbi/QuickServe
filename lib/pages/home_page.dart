@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quickserve/pages/favorites_page.dart';
 import 'package:quickserve/widgets/card_widget.dart';
 import 'package:quickserve/widgets/category_widget.dart';
 import 'package:get/get.dart';
@@ -21,7 +22,9 @@ class HomePage extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.favorite, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              Get.to(FavoritesPage());
+            },
           ),
           IconButton(
             icon: const Icon(Icons.notifications, color: Colors.white),
@@ -52,21 +55,23 @@ class HomePage extends StatelessWidget {
           SizedBox(
             height: 140,
             child: Obx(() {
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return CategoryWidget(
-                    text: userController.userList[index].company.name[0],
-                    image: userController.userList[index].image,
+              return userController.isLoading.value
+                  ? Center(child: CircularProgressIndicator())
+                  : ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return CategoryWidget(
+                        text: userController.userList[index].company.name[0],
+                        image: userController.userList[index].image,
+                      );
+                    },
+                    itemCount:
+                        userController.userList.length < 9
+                            ? userController.userList.length
+                            : 9,
+                    padding: const EdgeInsets.only(top: 10),
                   );
-                },
-                itemCount:
-                    userController.userList.length < 5
-                        ? userController.userList.length
-                        : 5,
-                padding: const EdgeInsets.only(top: 10),
-              );
             }),
           ),
           Row(
@@ -97,7 +102,7 @@ class HomePage extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 0.85,
+                  childAspectRatio: 0.87,
                   crossAxisSpacing: 5,
                   mainAxisSpacing: 5,
                 ),
